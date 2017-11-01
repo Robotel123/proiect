@@ -6,6 +6,15 @@
 //#include <opencv2\cv.h>
 #include "opencv2/opencv.hpp"
 
+#include <stdio.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#define PORT 20236
+
 using namespace std;
 using namespace cv;
 //initial min and max HSV filter values.
@@ -175,6 +184,47 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
 		else putText(cameraFeed, "TOO MUCH NOISE! ADJUST FILTER", Point(0, 50), 1, 2, Scalar(0, 0, 255), 2);
 	}
 }
+
+int socket_function(char *orders)
+{
+	
+	//struct sockaddr_in address;
+    int sock = 0;
+	char buff[2];
+int i;
+    struct sockaddr_in serv_addr;
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    {
+        printf("\n Socket creation error \n");
+        return -1;
+    }
+  
+    memset(&serv_addr, '0', sizeof(serv_addr));
+  
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
+      
+    // Convert IPv4 and IPv6 addresses from text to binary form
+    if(inet_pton(AF_INET, "193.226.12.217", &serv_addr.sin_addr)<=0) 
+    {
+        printf("\nInvalid address/ Address not supported \n");
+        return -1;
+    }
+  
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+    {
+        printf("\nConnection Failed \n");
+        return -1;
+    }
+	strcat(orders, "s");
+	for(i=0;i<strlen(orders); i++)
+		{
+    			sprintf(buff, "%c", orders[i]);
+			send(sock,buff, strlen(buff), 0);
+			sleep(2);
+		}
+}
+
 int main(int argc, char* argv[])
 {
 
@@ -182,8 +232,9 @@ int main(int argc, char* argv[])
 	//program
 	bool trackObjects = true;
 	bool useMorphOps = true;
+	socket_function(argv[1]);
 
-	Point p;
+	/*Point p;
 	//Matrix to store each frame of the webcam feed
 	Mat cameraFeed;
 	//matrix storage for HSV image
@@ -246,7 +297,7 @@ int main(int argc, char* argv[])
 		//delay 30ms so that screen can refresh.
 		//image will not appear without this waitKey() command
 		waitKey(30);
-	}
-
-	return 0;
+	}*/
+return 0;
 }
+
