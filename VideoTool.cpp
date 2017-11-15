@@ -185,7 +185,7 @@ void trackFilteredObject(int &x, int &y, Mat threshold, Mat &cameraFeed) {
 	}
 }
 
-int socket_function(char *orders)
+/*int socket_function(char *orders)
 {
 	
 	//struct sockaddr_in address;
@@ -223,7 +223,7 @@ int i;
 			send(sock,buff, strlen(buff), 0);
 			sleep(2);
 		}
-}
+}*/
 
 int main(int argc, char* argv[])
 {
@@ -232,9 +232,9 @@ int main(int argc, char* argv[])
 	//program
 	bool trackObjects = true;
 	bool useMorphOps = true;
-	socket_function(argv[1]);
+	//socket_function(argv[1]);
 
-	/*Point p;
+	Point p;
 	//Matrix to store each frame of the webcam feed
 	Mat cameraFeed;
 	//matrix storage for HSV image
@@ -267,7 +267,7 @@ int main(int argc, char* argv[])
 		cvtColor(cameraFeed, HSV, COLOR_BGR2HSV);
 		//filter HSV image between values and store filtered image to
 		//threshold matrix
-		inRange(HSV, Scalar(0, 110, 246), Scalar(256, 256, 256), threshold);
+		inRange(HSV, Scalar(0, 110, 246), Scalar(256, 256, 256), threshold); // galben
 		//perform morphological operations on thresholded image to eliminate noise
 		//and emphasize the filtered object(s)
 		if (useMorphOps)
@@ -278,7 +278,7 @@ int main(int argc, char* argv[])
 		if (trackObjects)
 			trackFilteredObject(x, y, threshold, cameraFeed);
 
-		inRange(HSV, Scalar(48, 35, 0), Scalar(256, 256, 256), threshold);
+		inRange(HSV, Scalar(120, 0, 246), Scalar(256, 256, 256), threshold); //roz
 		//perform morphological operations on thresholded image to eliminate noise
 		//and emphasize the filtered object(s)
 		if (useMorphOps)
@@ -292,12 +292,12 @@ int main(int argc, char* argv[])
 		//show frames
 		imshow(windowName2, threshold);
 		imshow(windowName, cameraFeed);
-//		imshow(windowName1, HSV);
+		imshow(windowName1, HSV);
 		setMouseCallback("Original Image", on_mouse, &p);
 		//delay 30ms so that screen can refresh.
 		//image will not appear without this waitKey() command
 		waitKey(30);
-	}*/
+	}
 return 0;
 }
 
